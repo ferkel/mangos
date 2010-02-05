@@ -462,6 +462,8 @@ void WorldSession::HandleCharCreateOpcode( WorldPacket & recv_data )
     if ((have_same_race && skipCinematics == CINEMATICS_SKIP_SAME_RACE) || skipCinematics == CINEMATICS_SKIP_ALL)
         pNewChar->setCinematic(1);                          // not show intro
 
+    pNewChar->SetAtLoginFlag(AT_LOGIN_FIRST);               // First login
+
     // Player created, save it now
     pNewChar->SaveToDB();
     charcount += 1;
@@ -775,6 +777,9 @@ void WorldSession::HandlePlayerLogin(LoginQueryHolder *holder)
         SendNotification(LANG_RESET_TALENTS);
     }
 
+    if (pCurrChar->HasAtLoginFlag(AT_LOGIN_FIRST))
+        pCurrChar->RemoveAtLoginFlag(AT_LOGIN_FIRST);
+
     // show time before shutdown if shutdown planned.
     if(sWorld.IsShutdowning())
         sWorld.ShutdownMsg(true,pCurrChar);
@@ -1049,7 +1054,7 @@ void WorldSession::HandleSetPlayerDeclinedNames(WorldPacket& recv_data)
         }
     }
 
-    if(!ObjectMgr::CheckDeclinedNames(GetMainPartOfName(wname, 0), declinedname))
+    if(!ObjectMgr::CheckDeclinedNames(wname, declinedname))
     {
         WorldPacket data(SMSG_SET_PLAYER_DECLINED_NAMES_RESULT, 4+8);
         data << uint32(1);

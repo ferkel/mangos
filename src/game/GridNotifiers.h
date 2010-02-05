@@ -160,8 +160,7 @@ namespace MaNGOS
         template<class NOT_INTERESTED> void Visit(GridRefManager<NOT_INTERESTED> &) {}
     };
 
-
-    struct MANGOS_DLL_DECL PlayerRelocationNotifier : public VisibleNotifier
+    struct MANGOS_DLL_DECL PlayerRelocationNotifier
     {
         PlayerRelocationNotifier(Player &pl, WorldObject const& viewPoint, bool forced) :
             VisibleNotifier(pl, viewPoint, forced) {}
